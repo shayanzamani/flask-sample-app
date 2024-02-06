@@ -1,5 +1,7 @@
 FROM --platform=$BUILDPLATFORM python:3.10-alpine AS builder
 
+EXPOSE 8000/tcp
+
 WORKDIR /app
 
 COPY requirements.txt /app
@@ -10,4 +12,3 @@ COPY . /app
 
 ENTRYPOINT ["python3"]
 CMD ["app.py"]
-
