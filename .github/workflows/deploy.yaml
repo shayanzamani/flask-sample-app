@@ -1,57 +1,43 @@
-name: Deploy Cluster
+name: Deploy CloudFormation Stack
 
 on:
-  workflow_dispatch:
-    inputs:
-      region:
-        description: 'AWS Region'
-        required: true
-        default: 'eu-west-1'
-      keypair:
-        description: 'SSH Key Pair'
-        required: true
+  push:
+    branches:
+      - "staging" # only execute this workflow when I’m pushing to “staging”
+
+env:
+  AWS_ROLE: arn:aws:iam::637423617370:role/GitHub-actions-role
+  AWS_REGION: us-west-2
+  APP_NAME: flask-simple-app
+  ENVIRONMENT: development
 
 jobs:
-  cluster:
+  deploy:
     name: Deploy stack to AWS
     runs-on: ubuntu-latest
-    outputs:
-      env-name: ${{ steps.env-name.outputs.environment }}
+    # Permissions are needed to interact with GitHub's OIDC Token endpoint.
+    permissions:
+      id-token: write
+      contents: read
+    
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout code from master branch
+        uses: actions/checkout@v2
 
-    - name: Configure AWS credentials
-      id: creds
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ github.event.inputs.region}}
-
-    - name: Configure environment name
-      id: env-name
-      env:
-        REPO: ${{ github.repository }}
-      run: |
-        ENVIRONMENT=`echo $REPO | tr "/" "-"`
-        echo "Environment name: $ENVIRONMENT"
-        echo "environment=$ENVIRONMENT" >> $GITHUB_OUTPUT
-
-    - name: Deploy Amazon EKS Cluster
-      id: eks-cluster
-      uses: aws-actions/aws-cloudformation-github-deploy@master
-      with:
-        name: ${{ steps.env-name.outputs.environment }}-cluster
-        template: https://s3.amazonaws.com/aws-quickstart/quickstart-amazon-eks/templates/amazon-eks-master.template.yaml
-        no-fail-on-empty-changeset: "1"
-        parameter-overrides: >-
-          AvailabilityZones=${{ github.event.inputs.region }}a,
-          AvailabilityZones=${{ github.event.inputs.region }}c,
-          KeyPairName=${{ github.event.inputs.keypair }},
-          NumberOfAZs=2,
-          ProvisionBastionHost=Disabled,
-          EKSPublicAccessEndpoint=Enabled,
-          EKSPrivateAccessEndpoint=Enabled,
-          RemoteAccessCIDR=0.0.0.0/0
+      # Configure AWS Credential
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ env.AWS_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      # Deploy cluster
+      - name: Deploys my cluster
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: ${{ env.APP_NAME }}-cluster
+          template: ./cluster_formation.yaml
+          no-fail-on-empty-changeset: "1"
+          parameter-overrides: AppName=${{ env.APP_NAME }, Environment=${{ env.ENVIRONMENT}}
 
