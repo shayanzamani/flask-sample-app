@@ -1,8 +1,23 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: An example CloudFormation template for Fargate.
+Parameters:
+  VPC:
+    Type: AWS::EC2::VPC::Id
+  SubnetA:
+    Type: AWS::EC2::Subnet::Id
+  SubnetB:
+    Type: AWS::EC2::Subnet::Id
+  Image:
+    Type: String
+    Default: 30057533/flask-simple-app:1.0.0
+  ServiceName:
+    Type: String
+    Default: MyFargate
 Resources:
   ECSCluster:
     Type: 'AWS::ECS::Cluster'
     Properties:
-      ClusterName: MyFargateCluster
+      ClusterName: !Join ['', [!Ref ServiceName, Cluster]]
       CapacityProviders:
         - FARGATE
         - FARGATE_SPOT
