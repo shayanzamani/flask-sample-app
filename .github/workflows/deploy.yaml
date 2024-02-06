@@ -39,5 +39,5 @@ jobs:
           name: ${{ env.APP_NAME }}-cluster
           template: ./cluster_formation.yaml
           no-fail-on-empty-changeset: "1"
-          parameter-overrides: AppName=${{ env.APP_NAME }, Environment=${{ env.ENVIRONMENT}}
+          parameter-overrides: AppName=${{ env.APP_NAME }}, Environment=${{ env.ENVIRONMENT}}
 
