@@ -38,4 +38,5 @@ jobs:
           name: ${{ env.APP_NAME }}Cluster
           template: ./cluster_formation.yaml
           no-fail-on-empty-changeset: "1"
+          capabilities: CAPABILITY_NAMED_IAM
 
