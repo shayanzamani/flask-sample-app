@@ -3,7 +3,7 @@ Description: An example CloudFormation template for Fargate.
 Parameters:
   Image:
     Type: String
-    Default: 30057533/flask-simple-app:1.0.0
+    Default: 30057533/flask-sample-app:1.0.0
   ServiceName:
     Type: String
     Default: MyFargate
