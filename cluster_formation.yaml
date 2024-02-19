@@ -36,6 +36,22 @@ Resources:
           Weight: 1
         - CapacityProvider: FARGATE_SPOT
           Weight: 1
+  
+  EcsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Security Group for ECS Tasks"
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: !Ref ContainerPort
+          ToPort: !Ref ContainerPort
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
 
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
@@ -127,3 +143,5 @@ Resources:
           Subnets:
             - !Ref PublicSubnet1
             - !Ref PublicSubnet2
+        SecurityGroups:
+          - !Ref EcsSecurityGroup
