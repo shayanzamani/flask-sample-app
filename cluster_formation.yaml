@@ -168,7 +168,7 @@ Resources:
     Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
     Properties:
       VpcId: !Ref VPC
-      Port: 80
+      Port: !Ref ContainerPort
       Protocol: HTTP
       TargetType: ip
       HealthCheckEnabled: true
