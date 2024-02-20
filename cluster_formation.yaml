@@ -44,8 +44,6 @@ Resources:
       VpcId: !Ref VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: !Ref ContainerPort
-          ToPort: !Ref ContainerPort
           CidrIp: 0.0.0.0/0
       SecurityGroupEgress:
         - IpProtocol: -1
