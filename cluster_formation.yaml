@@ -205,6 +205,6 @@ Resources:
           SecurityGroups:
             - !Ref EcsSecurityGroup
       LoadBalancers:
-        - ContainerName: !Ref Image
+        - ContainerName: !Ref ServiceName
           ContainerPort: !Ref ContainerPort
           TargetGroupArn: !Ref MyTargetGroup
