@@ -131,6 +131,7 @@ Resources:
       VpcId: !Ref VPC
       CidrBlock: !Ref PublicSubnet1CIDR
       MapPublicIpOnLaunch: true
+      AvailabilityZone: us-west-2a
       
   PublicSubnet2:
     Type: AWS::EC2::Subnet
@@ -138,6 +139,7 @@ Resources:
       VpcId: !Ref VPC
       CidrBlock: !Ref PublicSubnet2CIDR
       MapPublicIpOnLaunch: true
+      AvailabilityZone: us-east-1a
 
   PublicSubnet1RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
