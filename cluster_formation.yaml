@@ -202,6 +202,16 @@ Resources:
       LoadBalancerArn: !Ref MyLoadBalancer
       Port: 80
       Protocol: HTTP
+  
+  MyHTTPSListener:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref MyTargetGroup
+      LoadBalancerArn: !Ref MyLoadBalancer
+      Port: 443
+      Protocol: HTTPS
 
   Service:
     Type: AWS::ECS::Service
