@@ -205,6 +205,7 @@ Resources:
 
   Service:
     Type: AWS::ECS::Service
+    DependsOn: MyListener
     Properties: 
       ServiceName: !Ref ServiceName
       Cluster: !Ref ECSCluster
